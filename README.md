@@ -87,7 +87,9 @@ actually deployed — it cannot be exercised from a network-restricted sandbox.
 The live demo runs on [Render](https://render.com) as a free Docker web service
 built from this repo's `Dockerfile`, which installs `libgomp1` (needed by CatBoost),
 precompiles bytecode and builds the matplotlib font cache so the app starts quickly
-on the free instance's 0.1 CPU. Every push to `main` redeploys automatically.
+on the free instance's 0.1 CPU. The service was created from the public repo URL, so new
+commits are deployed with `render deploys create <service-id>` (or **Manual Deploy** in the
+dashboard). Connect Render's GitHub app to the repo if you want every push to redeploy.
 
 To deploy your own copy, either use the included `render.yaml` blueprint
 (Render dashboard → **New → Blueprint** → pick this repo), or use the
