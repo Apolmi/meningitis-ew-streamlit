@@ -1,6 +1,17 @@
+---
+title: Meningitis Environmental Risk Early Warning
+emoji: 🌡️
+colorFrom: red
+colorTo: yellow
+sdk: gradio
+sdk_version: 6.31.0
+app_file: app.py
+pinned: false
+---
+
 # Meningitis Environmental Risk Early Warning — research prototype
 
-A Streamlit demo of the stacked heterogeneous ensemble (ARNN + CatBoost, with ARNN +
+A Gradio demo of the stacked heterogeneous ensemble (ARNN + CatBoost, with ARNN +
 CatBoost + SVM-RBF reported alongside it) from the thesis *A Climate-Based Machine
 Learning Framework for Forecasting Meningitis Environmental Risk in Northeast
 Nigeria: A Stacked Heterogeneous Ensemble Learning Approach* (Andrew Apolmi, AUN).
@@ -15,8 +26,10 @@ function of climate and dust, not disease incidence.
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-streamlit run app.py
+python app.py
 ```
+
+Then open the local URL Gradio prints (default `http://127.0.0.1:7860`).
 
 ## Data and model files (`data/`)
 
@@ -51,15 +64,23 @@ thesis (Section 5.9 / Major 8): a genuinely live MERRA-2 feed would need a diffe
 faster-release data source.
 
 This call needs outbound internet access, so it only works where the app is
-actually deployed (e.g. Streamlit Community Cloud) — it cannot be exercised from a
-network-restricted sandbox.
+actually deployed — it cannot be exercised from a network-restricted sandbox.
 
-## Deployment (Streamlit Community Cloud)
+## Deployment (Hugging Face Spaces)
 
-1. Push this folder to a GitHub repo (see below).
-2. On [share.streamlit.io](https://share.streamlit.io), create a new app pointing at
-   that repo, branch `main`, and `app.py` as the entry point.
-3. No secrets are required — the NASA POWER API used here needs no API key.
+Hugging Face Spaces is the standard free host for Gradio apps (the Gradio
+equivalent of Streamlit Community Cloud):
+
+1. Create a new Space at [huggingface.co/new-space](https://huggingface.co/new-space),
+   choosing the **Gradio** SDK.
+2. Push this repo's contents to the Space's git remote (Spaces are themselves git
+   repos), or connect the Space to this GitHub repo for automatic sync.
+3. The `packages.txt` file installs `libgomp1` (needed by CatBoost); no other
+   secrets or API keys are required — the NASA POWER API used here needs none.
+
+The app can also run on any host that supports a `requirements.txt` + `app.py`
+Python app (e.g. a plain VM or container running `python app.py`), since it no
+longer depends on Streamlit Cloud specifically.
 
 ## Limits
 
