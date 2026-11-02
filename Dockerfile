@@ -11,6 +11,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# Do the slow first-run work at build time, not on Render's 0.1-CPU free instance:
+# byte-compile everything and build matplotlib's font cache.
+ENV PYTHONUNBUFFERED=1 MPLBACKEND=Agg MPLCONFIGDIR=/app/.mplcache
+RUN python -m compileall -q /usr/local/lib/python3.13 /app \
+    && python -c "import matplotlib.pyplot"
+
 ENV PORT=10000
 EXPOSE 10000
 
