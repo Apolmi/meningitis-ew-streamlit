@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: meningitis-ew
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: "10000"
+    healthCheckPath: /
