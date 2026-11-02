@@ -1,7 +1,7 @@
 # Meningitis Environmental Risk Early Warning — research prototype
 
-An interactive web app, hosted on Render, for the stacked heterogeneous ensemble
-(ARNN + CatBoost, with ARNN + CatBoost + SVM-RBF reported alongside it) from the thesis *A Climate-Based Machine
+A Gradio demo of the stacked heterogeneous ensemble (ARNN + CatBoost, with ARNN +
+CatBoost + SVM-RBF reported alongside it) from the thesis *A Climate-Based Machine
 Learning Framework for Forecasting Meningitis Environmental Risk in Northeast
 Nigeria: A Stacked Heterogeneous Ensemble Learning Approach* (Andrew Apolmi, AUN).
 
@@ -45,8 +45,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Then open `http://127.0.0.1:7860` in your browser. (The interface is built with the
-Gradio Python library, which is installed from `requirements.txt`.)
+Then open the local URL Gradio prints (default `http://127.0.0.1:7860`).
 
 ## Data and model files (`data/`)
 
@@ -98,9 +97,7 @@ To deploy your own copy, either use the included `render.yaml` blueprint
 
 ```bash
 render login
-render services create --name meningitis-ew --type web_service \
-  --repo https://github.com/<you>/meningitis-ew-streamlit --branch main \
-  --runtime docker --plan free --health-check-path / --env-var PORT=10000
+render services create --name meningitis-ew --type web_service   --repo https://github.com/<you>/meningitis-ew-streamlit --branch main   --runtime docker --plan free --health-check-path / --env-var PORT=10000
 ```
 
 No secrets or API keys are needed, since the NASA POWER API is public. The app also runs
