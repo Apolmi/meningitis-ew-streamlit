@@ -1,15 +1,3 @@
----
-title: Meningitis Environmental Risk Early Warning
-emoji: 🌡️
-colorFrom: red
-colorTo: yellow
-sdk: gradio
-sdk_version: 6.31.0
-python_version: "3.13"
-app_file: app.py
-pinned: false
----
-
 # Meningitis Environmental Risk Early Warning — research prototype
 
 A Gradio demo of the stacked heterogeneous ensemble (ARNN + CatBoost, with ARNN +
@@ -21,6 +9,33 @@ It forecasts, two weeks ahead and year-round, whether environmental conditions i
 Adamawa, Borno or Yobe fall in the elevated MEWS-derived classification (Orange/Red).
 **It does not forecast meningitis cases or outbreaks** — the target is a rule-based
 function of climate and dust, not disease incidence.
+
+## Live demo
+
+**▶ Try it: [meningitis-ew.onrender.com](https://meningitis-ew.onrender.com)**
+
+Hosted on Render's free plan. If nobody has used it for 15 minutes it goes to sleep,
+and the first visit after that takes about a minute to wake it.
+
+[![Demo: historical and live NASA POWER forecasts with local SHAP explanations, then the Explainability, History and About tabs](docs/demo.gif)](docs/demo.mp4)
+
+*30-second walkthrough: [download the MP4](docs/demo.mp4).*
+
+## Screenshots
+
+**Prediction: historical week, with a local SHAP explanation**
+
+![Prediction tab: historical-week forecast for Borno, Yellow tier, with local SHAP bar chart](docs/images/prediction-historical.png)
+
+**Prediction: live NASA POWER pull**
+
+![Prediction tab: live NASA POWER forecast for Borno with climatological dust substitute and local SHAP chart](docs/images/prediction-live.png)
+
+| Explainability (global SHAP) | History (sealed-test forecasts) |
+|---|---|
+| ![Explainability tab: global mean absolute SHAP importance for the 13 predictors](docs/images/explainability.png) | ![History tab: forecast tier over time for Borno, 2024 to 2025, with forecast table](docs/images/history.png) |
+
+![About tab: purpose, model, live data and limits](docs/images/about.png)
 
 ## Running locally
 
@@ -67,21 +82,24 @@ faster-release data source.
 This call needs outbound internet access, so it only works where the app is
 actually deployed — it cannot be exercised from a network-restricted sandbox.
 
-## Deployment (Hugging Face Spaces)
+## Deployment (Render, free plan)
 
-Hugging Face Spaces is the standard free host for Gradio apps (the Gradio
-equivalent of Streamlit Community Cloud):
+The live demo runs on [Render](https://render.com) as a free Docker web service
+built from this repo's `Dockerfile`, which installs `libgomp1` (needed by CatBoost),
+precompiles bytecode and builds the matplotlib font cache so the app starts quickly
+on the free instance's 0.1 CPU. Every push to `main` redeploys automatically.
 
-1. Create a new Space at [huggingface.co/new-space](https://huggingface.co/new-space),
-   choosing the **Gradio** SDK.
-2. Push this repo's contents to the Space's git remote (Spaces are themselves git
-   repos), or connect the Space to this GitHub repo for automatic sync.
-3. The `packages.txt` file installs `libgomp1` (needed by CatBoost); no other
-   secrets or API keys are required — the NASA POWER API used here needs none.
+To deploy your own copy, either use the included `render.yaml` blueprint
+(Render dashboard → **New → Blueprint** → pick this repo), or use the
+[Render CLI](https://render.com/docs/cli):
 
-The app can also run on any host that supports a `requirements.txt` + `app.py`
-Python app (e.g. a plain VM or container running `python app.py`), since it no
-longer depends on Streamlit Cloud specifically.
+```bash
+render login
+render services create --name meningitis-ew --type web_service   --repo https://github.com/<you>/meningitis-ew-streamlit --branch main   --runtime docker --plan free --health-check-path / --env-var PORT=10000
+```
+
+No secrets or API keys are needed, since the NASA POWER API is public. The app also runs
+anywhere that can run the Docker image or `python app.py`.
 
 ## Limits
 
